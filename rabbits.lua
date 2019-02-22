@@ -67,19 +67,20 @@ minetest.register_abm({
 	end
 })
 
-nodecore.register_limited_abm({
+minetest.register_abm({
 	label = "Rabbit cooking",
 	interval = 2,
 	chance = 1,
 	nodenames = {"group:visinv"},
-	neighbors = {"group:fire"},
 	action = function(pos)
 		local meta = minetest.get_meta(pos)
 		local ctime = meta:get_int("cooktime")
 		local inv = meta:get_inventory()
 		local stack = inv:get_stack("solo", 1)
 
-		if stack:is_empty() or stack:get_name() ~= "nc_rabbits:rabbit_dead" then return end
+		if stack:is_empty() or not stack:get_name():find("nc_rabbits:rabbit_dead") or
+		not minetest.find_node_near(pos, 1, "nc_fire:fire") then return end
+
 
 		if ctime == 0 then
 			meta:set_int("cooktime", 32) -- rabbit cooking time (30 seconds)

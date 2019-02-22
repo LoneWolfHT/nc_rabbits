@@ -54,7 +54,7 @@ nodecore.register_craft({
 	}
 })
 
-nodecore.register_limited_abm({
+minetest.register_abm({
 	label = "Rabbit trapping",
 	interval = 10,
 	chance = 1,
@@ -69,7 +69,7 @@ nodecore.register_limited_abm({
 		local trap_time = meta:get_int("trap_time")
 
 		if trap_time == 0 then
-			meta:set_int("trap_time", 100) -- rabbit trapping time (1 + 1/2 minutes)
+			meta:set_int("trap_time", math.random(62*5, 61*7)) -- rabbit trapping time (5-7 minutes)
 		elseif trap_time > 10 then
 			meta:set_int("trap_time", trap_time-10)
 		elseif trap_time <= 10 then
