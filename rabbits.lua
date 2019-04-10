@@ -38,7 +38,9 @@ minetest.register_node("nc_rabbits:rabbit_head", {
 	tiles = {"nc_rabbits_rabbit_head.png"},
 	paramtype = "light",
 	paramtype2 = "facedir",
-	groups = {unbreakable = 1},
+	on_punch = function(pos)
+		minetest.remove_node(pos)
+	end
 })
 
 minetest.register_abm({
@@ -67,28 +69,36 @@ minetest.register_abm({
 	end
 })
 
-minetest.register_abm({
-	label = "Rabbit cooking",
-	interval = 2,
-	chance = 1,
-	nodenames = {"group:visinv"},
-	action = function(pos)
-		local meta = minetest.get_meta(pos)
-		local ctime = meta:get_int("cooktime")
-		local inv = meta:get_inventory()
-		local stack = inv:get_stack("solo", 1)
+nodecore.register_craft({
+	label = "rabbit to cooked rabbit",
+	action = "cook",
+	touchgroups = {flame = 1},
+	duration = 30,
+	cookfx = true,
+	nodes = {
+		{
+			match = "nc_rabbits:rabbit_dead",
+			replace = "air"
+		}
+	},
+	after = function(pos)
+		nodecore.place_stack(pos, "nc_rabbits:rabbit_cooked")
+	end
+})
 
-		if stack:is_empty() or not stack:get_name():find("nc_rabbits:rabbit_dead") or
-		not minetest.find_node_near(pos, 1, "nc_fire:fire") then return end
-
-
-		if ctime == 0 then
-			meta:set_int("cooktime", 32) -- rabbit cooking time (30 seconds)
-		elseif ctime > 2 then
-			meta:set_int("cooktime", ctime-2)
-		elseif ctime <= 2 then
-			minetest.remove_node(pos)
-			nodecore.place_stack(pos, "nc_rabbits:rabbit_cooked")
-		end
+nodecore.register_craft({
+	label = "cooked rabbit to ashes",
+	action = "cook",
+	touchgroups = {flame = 1},
+	duration = 7,
+	cookfx = true,
+	nodes = {
+		{
+			match = "nc_rabbits:rabbit_cooked",
+			replace = "air"
+		}
+	},
+	after = function(pos)
+		nodecore.place_stack(pos, "nc_fire:ash")
 	end
 })
