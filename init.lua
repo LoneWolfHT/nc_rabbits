@@ -92,7 +92,7 @@ minetest.register_abm({
 
 minetest.register_abm({
 	label = "Rabbit spreading",
-	interval = 120,
+	interval = 60 * 3, -- 3 minutes
 	chance = 0.5,
 	nodenames = {"nc_terrain:dirt_with_grass"},
 	neighbors = {"nc_rabbits:rabbit_hole", "nc_rabbits:rabbit_hole"},

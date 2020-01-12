@@ -7,7 +7,7 @@ minetest.register_craftitem("nc_rabbits:rabbit_dead", {
 minetest.register_craftitem("nc_rabbits:rabbit_cooked", {
 	description = "Cooked Rabbit",
 	stack_max = 1,
-	inventory_image = "nc_rabbits_rabbit_dead.png^nc_rabbits_cook.png",
+	inventory_image = "nc_rabbits_rabbit_dead.png^[colorize:#5c330f:166",
 	on_use = function(itemstack, user)
 		local name = user:get_player_name()
 
@@ -99,6 +99,6 @@ nodecore.register_craft({
 		}
 	},
 	after = function(pos)
-		nodecore.place_stack(pos, "nc_fire:ash")
+		nodecore.place_stack(pos, "nc_fire:lump_ash")
 	end
 })
