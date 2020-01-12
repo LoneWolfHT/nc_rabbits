@@ -10,7 +10,7 @@ minetest.register_node("nc_rabbits:trap", {
 })
 
 minetest.register_node("nc_rabbits:rabbit_hole", {
-	description = "Dirt with Hole",
+	description = "Holey Grass",
 	tiles = {
 		"nc_terrain_grass_top.png^nc_rabbits_hole.png",
 		"nc_terrain_dirt.png",
@@ -19,6 +19,8 @@ minetest.register_node("nc_rabbits:rabbit_hole", {
 	groups = {
 		crumbly = 2,
 	},
+	silktouch = {crumbly = 4},
+	stack_max = 1,
 	drop_in_place = "nc_terrain:dirt"
 })
 
@@ -85,5 +87,29 @@ minetest.register_abm({
 			end
 		end
 		end
+	end
+})
+
+minetest.register_abm({
+	label = "Rabbit spreading",
+	interval = 120,
+	chance = 0.5,
+	nodenames = {"nc_terrain:dirt_with_grass"},
+	neighbors = {"nc_rabbits:rabbit_hole", "nc_rabbits:rabbit_hole"},
+	action = function(pos)
+		local neighbors = minetest.find_nodes_in_area_under_air(
+			vector.subtract(pos, 1), -- pos1
+			vector.add(pos, 1), -- pos2
+			"nc_rabbits:rabbit_hole" -- nodenames
+		)
+
+		for _, npos in pairs(neighbors) do
+			local oppositepos = vector.add(vector.subtract(pos, npos), pos)
+
+			if minetest.get_node(oppositepos).name == "nc_rabbits:rabbit_hole" then -- There is another rabbit hole opposite the grass node
+				minetest.set_node(pos, {name = "nc_rabbits:rabbit_hole"})
+				return
+			end
+		end	
 	end
 })
