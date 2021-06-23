@@ -14,7 +14,7 @@ minetest.register_node("nc_rabbits:rabbit_hole", {
 	tiles = {
 		"nc_terrain_grass_top.png^nc_rabbits_hole.png",
 		"nc_terrain_dirt.png",
-		"nc_terrain_dirt.png^nc_terrain_grass_side.png"
+		"nc_terrain_dirt.png^(nc_terrain_grass_top.png^[mask:nc_terrain_grass_sidemask.png)"
 	},
 	groups = {
 		crumbly = 2,
@@ -71,7 +71,7 @@ minetest.register_abm({
 		local trap_time = meta:get_int("trap_time")
 
 		if trap_time == 0 then
-			meta:set_int("trap_time", math.random(62*5, 61*7)) -- rabbit trapping time (5-7 minutes)
+			meta:set_int("trap_time", math.random(60*3, 60*7)) -- rabbit trapping time (3-7 minutes)
 		elseif trap_time > 10 then
 			meta:set_int("trap_time", trap_time-10)
 		elseif trap_time <= 10 then
@@ -110,6 +110,6 @@ minetest.register_abm({
 				minetest.set_node(pos, {name = "nc_rabbits:rabbit_hole"})
 				return
 			end
-		end	
+		end
 	end
 })
